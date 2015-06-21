@@ -1,17 +1,9 @@
-#!/usr/bin/python
-
-"""
-    Demonstracao de Resiliencia de uma SDN
-    Giovani Zamboni
-"""
-
+# -*- coding: utf-8 -*-
 from mininet.net import Mininet
 from mininet.node import RemoteController, CPULimitedHost
-from mininet.cli import CLI
-from mininet.log import setLogLevel, info
+from mininet.log import info
 from mininet.link import TCLink
-from mininet.util import dumpNodeConnections
-from mininet.clean import cleanup
+#from FloodLightClient import StaticFlowPusher
 
 
 def fatTree():
@@ -126,42 +118,3 @@ def fatTree():
     net.addLink(h16, s44)
 
     return net
-
-
-def perfTest(netSim):
-    netSim.start()
-    info("*** Dumping host connections\n")
-    dumpNodeConnections(netSim.hosts)
-    info("*** Testing network connectivity\n")
-    netSim.pingAll()
-    info("*** Testing bandwidth between hosts\n")
-    h1, h2, h3, h4 = netSim.get('h1', 'h2', 'h3', 'h4')
-    netSim.iperf((h1, h4))
-    netSim.iperf((h2, h4))
-    netSim.iperf((h1, h3))
-    netSim.iperf((h2, h3))
-
-
-def multiPath():
-
-    net = fatTree()
-
-    info('*** Starting network\n')
-    net.start()
-
-    #info('*** Performing basic tests\n')
-    #perfTest(net)
-
-    #info("*** Configuring Flows")
-    #flClient = StaticFlowPusher("127.0.0.1")
-
-    info('*** Running CLI\n')
-    CLI(net)
-
-    info('*** Stopping network')
-    net.stop()
-    cleanup()
-
-if __name__ == '__main__':
-    setLogLevel('info')
-    multiPath()
